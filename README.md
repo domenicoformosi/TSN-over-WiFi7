@@ -14,8 +14,6 @@ Per supportare questa convergenza è necessario far convivere le caratteristiche
 * La presenza di più flussi di informazioni, ognuno con il proprio grado di “criticità”
 * Comunicazione deterministica, e cosa ciò comporta nel “mondo” IT, ricordando che la semantica di comunicazione che prevale nelle reti è di tipo best-effort
 
-Nei prossimi capitoli verranno presentate alcune delle tecnologie fondamentali per supportare questa transizione, e come queste possono essere usate in situazioni reali.
-Nei prossimi capitoli verranno presentate alcune delle tecnologie fondamentali per supportare questa transizione, e come queste possono essere usate in situazioni reali.
 Il prototipo realizzato a sostegno della tesi TSN-over-WiFi7 presenta la seguente struttura:
 ```text
 [ Talker ]                                         [ Listener ]
