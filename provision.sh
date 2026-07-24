@@ -59,25 +59,6 @@ if [ -f /opt/tsn_lab/ansible/requirements.yml ]; then
   ansible-galaxy collection install -r /opt/tsn_lab/ansible/requirements.yml
 fi
 
-echo "==> [7/10] Modulo mac80211_hwsim persistente (radios=4)"
-# 4 radio, una per nodo del prototipo: talker, listener, bridge-repl,
-# bridge-elim (ARCHITECTURE.md §1.1). /etc/modules carica il modulo al
-# boot ma NON accetta parametri: vanno dichiarati in /etc/modprobe.d,
-# altrimenti al riavvio (incluso il 'vagrant reload' subito dopo il
-# cambio kernel) il modulo riparte con radios=2 di default, qualunque
-# valore sia stato passato al modprobe one-shot qui sotto.
-touch /etc/modules
-grep -qxF "mac80211_hwsim" /etc/modules || echo "mac80211_hwsim" >> /etc/modules
-cat > /etc/modprobe.d/mac80211_hwsim.conf <<'EOF'
-options mac80211_hwsim radios=4
-EOF
-# Se il modulo e' gia' caricato con un numero di radio diverso, ricaricalo
-# per applicare subito il parametro persistito sopra.
-if lsmod | grep -q '^mac80211_hwsim'; then
-  modprobe -r mac80211_hwsim 2>/dev/null || true
-fi
-modprobe mac80211_hwsim radios=4 2>/dev/null || true
-
 echo "==> [8/10] Installazione kernel mainline 7.1.4"
 # Build ufficiale del kernel team Ubuntu (non presente in HWE/apt).
 # Non firmato: va bene qui perche' la VM non usa secure boot.
