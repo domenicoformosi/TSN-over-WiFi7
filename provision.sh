@@ -33,6 +33,7 @@ apt-get install -y \
 echo "==> [4/10] Installazione LXD"
 # Su Ubuntu 24.04 il pacchetto apt 'lxd' è transitorio verso lo snap.
 # Proviamo apt e ripieghiamo sullo snap in modo idempotente.
+# LXD non è stato utilizzato, ma lascio comunque
 if ! command -v lxc >/dev/null 2>&1; then
   apt-get install -y lxd || {
     apt-get install -y snapd
