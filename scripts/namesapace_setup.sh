@@ -80,19 +80,19 @@ ip netns exec bridge-elim ip link set veth-ret-elim up
 ip netns exec bridge-repl ip link set veth-ret-repl up
 
 # veth frer: quelle sui cui avviene l'effettiva duplicazione
-ip link add veth-repl netns bridge-repl type veth peer name veth-elim netns bridge-elim
-ip link add veth-repl-b netns bridge-repl type veth peer name veth-elim-b netns bridge-elim
+ip link add veth-repl0 netns bridge-repl type veth peer name veth-elim0 netns bridge-elim
+ip link add veth-repl1 netns bridge-repl type veth peer name veth-elim1 netns bridge-elim
 # eventualmete n...
 
-ip netns exec bridge-repl ip link set veth-repl up
-ip netns exec bridge-repl ip link set veth-repl-b up
+ip netns exec bridge-repl ip link set veth-repl0 up
+ip netns exec bridge-repl ip link set veth-repl1 up
 
 # senza txvlan off il tag resta nei metadati skb e
 # la radio trasmette un frame untagged
 ip netns exec bridge-repl ethtool -K wlan1 txvlan off
 ip netns exec bridge-repl ethtool -K vproxy-repl-out rxvlan off txvlan off
-ip netns exec bridge-repl ethtool -K veth-repl rxvlan off txvlan off
-ip netns exec bridge-repl ethtool -K veth-repl-b rxvlan off txvlan off
+ip netns exec bridge-repl ethtool -K veth-repl0 rxvlan off txvlan off
+ip netns exec bridge-repl ethtool -K veth-repl1 rxvlan off txvlan off
 ip netns exec bridge-repl ethtool -K vproxy-repl-in txvlan off
 
 # bridge-elim
@@ -110,13 +110,13 @@ ip netns exec bridge-elim ip link set ptp-elim0 up
 ip netns exec bridge-elim ip link set ptp-elim1 up
 
 # veth frer lato elim: le coppie sono create nella sezione bridge-repl, qui alzo il peer
-ip netns exec bridge-elim ip link set veth-elim up
-ip netns exec bridge-elim ip link set veth-elim-b up
+ip netns exec bridge-elim ip link set veth-elim0 up
+ip netns exec bridge-elim ip link set veth-elim1 up
 
 # senza txvlan off il tag resta nei metadati skb e
 # la radio trasmette un frame untagged
-ip netns exec bridge-elim ethtool -K veth-elim rxvlan off txvlan off
-ip netns exec bridge-elim ethtool -K veth-elim-b rxvlan off txvlan off
+ip netns exec bridge-elim ethtool -K veth-elim0 rxvlan off txvlan off
+ip netns exec bridge-elim ethtool -K veth-elim1 rxvlan off txvlan off
 ip netns exec bridge-elim ethtool -K vproxy-elim-in rxvlan off txvlan off
 ip netns exec bridge-elim ethtool -K wlan2 txvlan off
 ip netns exec bridge-elim ethtool -K vproxy-elim-out gro on

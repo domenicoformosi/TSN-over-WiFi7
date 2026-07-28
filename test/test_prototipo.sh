@@ -14,37 +14,37 @@ grep -aE '^###|AP-ENABLED|^freq=|^wifi_generation|^wpa_state' /tmp/tsn_test/run_
 echo ""
 
 echo "########## 1. FRER: duplicazione ed eliminazione ##########"
-A0=$(ip netns exec bridge-repl ethtool -S veth-repl   | awk '/xdp_xmit:/{print $2; exit}')
-B0=$(ip netns exec bridge-repl ethtool -S veth-repl-b | awk '/xdp_xmit:/{print $2; exit}')
+A0=$(ip netns exec bridge-repl ethtool -S veth-repl0  | awk '/xdp_xmit:/{print $2; exit}')
+B0=$(ip netns exec bridge-repl ethtool -S veth-repl1 | awk '/xdp_xmit:/{print $2; exit}')
 P0=$(grep -a 'Passed:' /tmp/frer_elim.log | tail -1 | awk '{print $2}' | tr -dc 0-9)
 D0=$(grep -a 'Passed:' /tmp/frer_elim.log | tail -1 | awk '{print $4}' | tr -dc 0-9)
 ip netns exec talker ping -c 10 -i 0.3 -W 1 10.0.0.20 | tail -2
 sleep 2
-A1=$(ip netns exec bridge-repl ethtool -S veth-repl   | awk '/xdp_xmit:/{print $2; exit}')
-B1=$(ip netns exec bridge-repl ethtool -S veth-repl-b | awk '/xdp_xmit:/{print $2; exit}')
+A1=$(ip netns exec bridge-repl ethtool -S veth-repl0  | awk '/xdp_xmit:/{print $2; exit}')
+B1=$(ip netns exec bridge-repl ethtool -S veth-repl1 | awk '/xdp_xmit:/{print $2; exit}')
 P1=$(grep -a 'Passed:' /tmp/frer_elim.log | tail -1 | awk '{print $2}' | tr -dc 0-9)
 D1=$(grep -a 'Passed:' /tmp/frer_elim.log | tail -1 | awk '{print $4}' | tr -dc 0-9)
 echo ""
-echo "replicazione  percorso A (veth-repl)   : $((A1-A0))"
-echo "replicazione  percorso B (veth-repl-b) : $((B1-B0))"
+echo "replicazione  percorso A (veth-repl0) : $((A1-A0))"
+echo "replicazione  percorso B (veth-repl1) : $((B1-B0))"
 echo "eliminazione  passati al listener      : $((P1-P0))"
 echo "eliminazione  duplicati scartati       : $((D1-D0))"
 echo ""
 
 echo "########## 2. FRER: rimozione del percorso A ##########"
-ip netns exec bridge-repl ip link set veth-repl down
-echo "veth-repl abbattuta"
+ip netns exec bridge-repl ip link set veth-repl0 down
+echo "veth-repl0 abbattuta"
 sleep 1
 A0=$A1; B0=$B1
 ip netns exec talker ping -c 10 -i 0.3 -W 1 10.0.0.20 | tail -2
 sleep 2
-A1=$(ip netns exec bridge-repl ethtool -S veth-repl   | awk '/xdp_xmit:/{print $2; exit}')
-B1=$(ip netns exec bridge-repl ethtool -S veth-repl-b | awk '/xdp_xmit:/{print $2; exit}')
+A1=$(ip netns exec bridge-repl ethtool -S veth-repl0  | awk '/xdp_xmit:/{print $2; exit}')
+B1=$(ip netns exec bridge-repl ethtool -S veth-repl1 | awk '/xdp_xmit:/{print $2; exit}')
 echo ""
 echo "replicazione  percorso A (abbattuto)   : $((A1-A0))"
 echo "replicazione  percorso B               : $((B1-B0))"
-ip netns exec bridge-repl ip link set veth-repl up
-echo "veth-repl ripristinata"
+ip netns exec bridge-repl ip link set veth-repl0 up
+echo "veth-repl0 ripristinata"
 sleep 2
 echo ""
 
