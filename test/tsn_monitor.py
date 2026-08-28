@@ -20,9 +20,10 @@ def stampa(t, lat, seq):
         return
     attesi = max(seq) - min(seq) + 1
     persi  = attesi - len(seq)
+    jitter = sum(abs(lat[i] - lat[i-1]) for i in range(1, len(lat))) / (len(lat) - 1) if len(lat) > 1 else 0.0
     print("t=%5.1fs   ricevuti %3d/%3d   persi %3d (%5.1f%%)   min %6.3f  avg %6.3f  max %6.3f  jitter %6.3f  ms"
           % (t, len(seq), attesi, persi, 100.0 * persi / attesi,
-             min(lat), sum(lat) / len(lat), max(lat), max(lat) - min(lat)))
+             min(lat), sum(lat) / len(lat), max(lat), jitter))
 
 inizio   = time.time()
 fine     = inizio + secondi
